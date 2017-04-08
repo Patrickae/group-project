@@ -1,4 +1,9 @@
 
+$(document).ready(function(){
+
+
+
+
 function getLocation() {
 	if (navigator.geolocation) {
 		navigator.geolocation.watchPosition(showPosition);
@@ -11,21 +16,22 @@ function getLocation() {
 function showPosition(position) {
 	$("#demo").html("Latitude: " + position.coords.latitude + 
 		"<br>Longitude: " + position.coords.longitude); 
-}
-
-
+};
 
 
 
 
 $("#runSearch").on("click", function(){
-	event.preventDefault();
+
+
+	
+
 	$(".list").empty();
 	$(".related-artists").empty();
 
 	getLocation();
 
-	event.preventDefault();
+	
 
 	var artistInput = $("#inputName").val().trim();
 
@@ -94,3 +100,8 @@ $("#runSearch").on("click", function(){
 });
 });
 
+
+
+
+
+});
