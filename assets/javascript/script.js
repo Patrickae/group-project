@@ -1,3 +1,4 @@
+
 function getLocation() {
 	if (navigator.geolocation) {
 		navigator.geolocation.watchPosition(showPosition);
@@ -92,3 +93,4 @@ $("#runSearch").on("click", function(){
 
 });
 });
+
