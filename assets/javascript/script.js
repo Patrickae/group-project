@@ -41,7 +41,7 @@
      
 
 var relatedArtistsList = [];    
-
+var relatedArtistsLength = 5;
 
 
 
@@ -78,9 +78,9 @@ function getAllArtistInfo(x){
 
 
 
-
 	//artist ID searched in order to find related artists
 		var relatedArtists = "https://api.spotify.com/v1/artists/"+artistId+"/related-artists";	
+
 
 		$.ajax({
 			url: relatedArtists,
@@ -89,12 +89,12 @@ function getAllArtistInfo(x){
 
 			console.log(data);
 	//loop through array of related artist objects. pull out whatever info we need on each
-			for (i=0; i < data.artists.length; i++){
+			for (i=0; i < relatedArtistsLength; i++){
 
 				relatedArtistsList = data.artists;
 			
-				var image = $("<img src="+data.artists[i].images[1].url+" class='related' value="+i+"></img>");
-				$(".related-artists").append(image);
+				var image = $("<img src="+data.artists[i].images[1].url+" class='related' value="+i+">"+data.artists[i].name+"</img><br/>");
+				$("#related-artists").append(image);
 
 			};
 
@@ -106,14 +106,14 @@ function getAllArtistInfo(x){
 	//search seat geek for events related to our artist
 	$.ajax({
 		type:"GET",
-		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + "&geoip=true&range=100mi",
+		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + "&geoip=true&range=200mi",
 		async:true,
 		dataType: "json",
 		success: function(results) {
 
 			console.log(results);
 
-
+			if(results.events.length > 0){
 
 			for (i=0; i< results.events.length; i++){
 
@@ -130,19 +130,21 @@ function getAllArtistInfo(x){
             var prettyTime = moment(eventTime).format("MMM Do, hh:mm");
             console.log(prettyTime);
 
-         //    $("#event-info").html(prettyTime + " <a href="+ eventInfo.url +" target='_blank'><button class='btn btn-warning'>Get your tickets Here!</button></a>");
-        	
-        	// };
-
+            var performerName =  eventInfo.performers[0].name;
+            var performerImg=  eventInfo.performers[0].image;
 
 
         	var newMediaNode = $("<div class='media'>");
 
 			var mediaPic = $("<div class='media-left artist-pic'>");
 
+			var artistPic = $("<img src='"+performerImg+"' alt='"+performerName+"'>");
+
+			mediaPic.append(artistPic);
+
 			var newMediaBody = $("<div class='media-body'>");
 
-			var eventTitleDiv = $("<h4 class='media-heading'>"+ artistName +" live at "+ venueName +"</h4>");
+			var eventTitleDiv = $("<h4 class='media-heading'>"+ performerName +" live at "+ venueName +"</h4>");
 
 			var eventInfoDiv = $("<div>"+prettyTime + " <a href="+ eventInfo.url +" target='_blank'><button class='btn btn-warning'>Get your tickets Here!</button></a></div>");
 
@@ -157,6 +159,10 @@ function getAllArtistInfo(x){
 
             var eventLocation = eventInfo.venue.location;
         };
+    }else{
+    	$("#event-list").html("<h1> Sorry, there are no upcoming events for this artist in your area</h1>");
+    };
+   
 
           },
 
@@ -187,6 +193,8 @@ $("#runSearch").on("click", function(){
 
 $(document).on("click", ".related", function(){
 
+		$("#related-artists").empty();
+		$("#event-list").empty();
 		artistNumb = $(this).attr("value")
 		console.log(artistNumb);
 		relatedArtist = relatedArtistsList[artistNumb].name;
