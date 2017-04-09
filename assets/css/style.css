@@ -1,0 +1,13 @@
+.related{ height:100px;
+		width:100px; 
+		opacity:0.3;
+		border-radius:50px;}
+.related-artists { width:500px; }
+
+.related:hover{opacity:1;}
+
+#current-artist-pic{ height:150px;
+					border-radius:10px; }
+
+
+
