@@ -8,7 +8,10 @@
 
 img.artist-img{ height:100px;
 					border-radius:10px; }
+					
 .header h1{ color:white; }
+
+button{display:block;}
 
 
 

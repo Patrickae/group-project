@@ -67,6 +67,13 @@ function getAllArtistInfo(x){
 		//artist name - to be displayed and to be used to search seatgeek
 		var artistName = artistInfo.name;
 
+		var artistImgUrl = artistInfo.images[1].url;
+		var artistImg= $("<img src='"+artistImgUrl+"'' alt='"+artistName+"' class='img-responsive'>")
+
+		$("#artist-image").append(artistImg);
+
+		console.log(artistImgUrl);
+
 		$("#results-title").text("Events for "+artistName+ " in your area")
 		console.log(artistName);
 
@@ -106,70 +113,67 @@ function getAllArtistInfo(x){
 	//search seat geek for events related to our artist
 	$.ajax({
 		type:"GET",
-		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + '&geoip=true&range=200mi';
+		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + '&geoip=true&range=200mi',
 		async:true,
 		dataType: "json",
 		success: function(results) {
 
 			console.log(results);
 
+
+
+
 			if(results.events.length > 0){
 
-			for (i=0; i< results.events.length; i++){
-
-			
-
-			var eventInfo = results.events[i];
-
-			var venueName = eventInfo.venue.name;
-
-			console.log(venueName);
-			// $("#event-title").text(artistName +" live at "+ venueName);
-            
-            var eventTime = eventInfo.datetime_local;
-            var prettyTime = moment(eventTime).format("MMM Do, hh:mm");
-            console.log(prettyTime);
-
-            var performerName =  eventInfo.performers[0].name;
-            var performerImg=  eventInfo.performers[0].image;
+				for (i=0; i< results.events.length; i++){
 
 
-        	var newMediaNode = $("<div class='media'>");
+				var eventInfo = results.events[i];
 
-			var mediaPic = $("<div class='media-left artist-pic'>");
+				var venueName = eventInfo.venue.name;
 
-			var artistPic = $("<img src='"+performerImg+"' alt='"+performerName+"'>");
+				console.log(venueName);
+				// $("#event-title").text(artistName +" live at "+ venueName);
+	            
+	            var eventTime = eventInfo.datetime_local;
+	            var prettyTime = moment(eventTime).format("ddd, MMM Do, hh:mm");
+	            console.log(prettyTime);
 
-			mediaPic.append(artistPic);
+	            var performerName =  eventInfo.performers[0].name;
 
-			var newMediaBody = $("<div class='media-body'>");
+	        	var newMediaNode = $("<div class='media'>");
 
-			var eventTitleDiv = $("<h4 class='media-heading'>"+ performerName +" live at "+ venueName +"</h4>");
+				var newMediaBody = $("<div class='media-body'>");
 
-            var eventLocation = eventInfo.venue.location;
-            var locationFormatted = {lat:eventLocation.lat, lng:eventLocation.lon};
-            console.log(locationFormatted)
+				var eventTitleDiv = $("<h4 class='media-heading'>"+ performerName +" live at "+ venueName +"</h4>");
 
-			var eventInfoDiv = $("<div>"+prettyTime + " <a href="+ eventInfo.url +" target='_blank'><button data-lat='" + locationFormatted.lat + "' data-lng='" + locationFormatted.lng + "' class='btn btn-warning'>Get your tickets Here!</button></a></div>");
+	            var eventLocation = eventInfo.venue.location;
 
-			newMediaBody.append(eventTitleDiv);
-			newMediaBody.append(eventInfoDiv);
+	            var locationFormatted = {lat:eventLocation.lat, lng:eventLocation.lon};
 
-            var tixButton = eventInfoDiv.find('button');
-            tixButton.on('click',  function(evt) {
-                var newCoords ={lat: parseFloat($(this).attr('data-lat')), lng: parseFloat($(this).attr('data-lng'))};
-                console.log(newCoords);
-                makeDaMap(newCoords);
-            });
+	            console.log(locationFormatted)
 
-			newMediaNode.append(mediaPic);
-			newMediaNode.append(newMediaBody);
+				var eventInfoDiv = $("<div>"+prettyTime + " <button data-lat='" + locationFormatted.lat + "' data-lng='" + locationFormatted.lng + "'class='btn btn-success btn-block' id='get-location'>Get Location</button><a href="+ eventInfo.url +" target='_blank'><button class='btn btn-warning btn-block'>Get your tickets Here!</button></a></div>");
 
-			$("#event-list").append(newMediaNode);
+				newMediaBody.append(eventTitleDiv);
+				newMediaBody.append(eventInfoDiv);
+
+	            var tixButton = eventInfoDiv.find('#get-location');
+	            tixButton.on('click',  function(evt) {
+	                var newCoords ={lat: parseFloat($(this).attr('data-lat')), lng: parseFloat($(this).attr('data-lng'))};
+	                console.log(newCoords);
+	                makeDaMap(newCoords);
+	            });
+
+				
+				newMediaNode.append(newMediaBody);
+
+				$("#event-list").append(newMediaNode);
 
         };
+
     }else{
-    	$("#event-list").html("<h1> Sorry, there are no upcoming events for this artist in your area</h1>");
+    		$("#event-list").html("<h1> Sorry, there are no upcoming events for this artist in your area</h1>");
     };
    
 
@@ -183,9 +187,19 @@ function getAllArtistInfo(x){
 
 
 
+//function to clear divs out
+function clearDivs(){
+	$("#artist-image").empty();
+	$("#related-artists").empty();
+	$("#event-list").empty();
+};
+
+
+
 
 $("#results").hide();
 		// on click run function
+
 $("#runSearch").on("click", function(){
 		//prevent default in order for the page not to reload
 		event.preventDefault();
@@ -201,14 +215,21 @@ $("#runSearch").on("click", function(){
 
 
 $(document).on("click", ".related", function(){
-
-		$("#related-artists").empty();
-		$("#event-list").empty();
+		clearDivs();
 		artistNumb = $(this).attr("value")
 		console.log(artistNumb);
 		relatedArtist = relatedArtistsList[artistNumb].name;
 		console.log(relatedArtist);
 		getAllArtistInfo(relatedArtist);
+
+});
+
+
+$("#submit").on("click", function(){
+	event.preventDefault();
+	clearDivs();
+	newArtist = $("#artist-input").val().trim();
+	getAllArtistInfo(newArtist);
 
 });
 
