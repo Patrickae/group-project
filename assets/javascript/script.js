@@ -100,13 +100,14 @@ function getAllArtistInfo(x){
 
 
 	});
+ 
 
 
 
 	//search seat geek for events related to our artist
 	$.ajax({
 		type:"GET",
-		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + '&geoip=true&range=200mi';
+		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + '&geoip=true&range=200mi',
 		async:true,
 		dataType: "json",
 		success: function(results) {
