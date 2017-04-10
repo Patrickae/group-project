@@ -6,9 +6,9 @@
 
 .related:hover{opacity:1;}
 
-#current-artist-pic{ height:150px;
+img.artist-img{ height:100px;
 					border-radius:10px; }
-
+.header h1{ color:white; }
 
 
 

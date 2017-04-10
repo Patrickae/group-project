@@ -113,11 +113,12 @@ function getAllArtistInfo(x){
 
 			console.log(results);
 
+			//check if there are options
 			if(results.events.length > 0){
 
+			//for all options - display them on the page
 			for (i=0; i< results.events.length; i++){
-
-			
+		
 
 			var eventInfo = results.events[i];
 
@@ -127,18 +128,20 @@ function getAllArtistInfo(x){
 			// $("#event-title").text(artistName +" live at "+ venueName);
             
             var eventTime = eventInfo.datetime_local;
-            var prettyTime = moment(eventTime).format("MMM Do, hh:mm");
+            var prettyTime = moment(eventTime).format("dddd, MMM Do, hh:mm a");
             console.log(prettyTime);
 
             var performerName =  eventInfo.performers[0].name;
             var performerImg=  eventInfo.performers[0].image;
 
 
+            //constructing html to be diaplayed on the page as a media object
+
         	var newMediaNode = $("<div class='media'>");
 
 			var mediaPic = $("<div class='media-left artist-pic'>");
 
-			var artistPic = $("<img src='"+performerImg+"' alt='"+performerName+"'>");
+			var artistPic = $("<img src='"+performerImg+"' alt='"+performerName+"' class='artist-img' ></img>");
 
 			mediaPic.append(artistPic);
 
@@ -146,11 +149,10 @@ function getAllArtistInfo(x){
 
 			var eventTitleDiv = $("<h4 class='media-heading'>"+ performerName +" live at "+ venueName +"</h4>");
 
-			var eventInfoDiv = $("<div>"+prettyTime + " <a href="+ eventInfo.url +" target='_blank'><button class='btn btn-warning'>Get your tickets Here!</button></a></div>");
+			var eventInfoDiv = $("<div>"+ prettyTime + " <a href="+ eventInfo.url +" target='_blank'><button class='btn btn-warning'>Get your tickets Here!</button></a></div>");
 
 			newMediaBody.append(eventTitleDiv);
 			newMediaBody.append(eventInfoDiv);
-
 
 			newMediaNode.append(mediaPic);
 			newMediaNode.append(newMediaBody);
@@ -158,8 +160,10 @@ function getAllArtistInfo(x){
 			$("#event-list").append(newMediaNode);
 
             var eventLocation = eventInfo.venue.location;
+            console.log(eventLocation);
         };
     }else{
+    	//if there are no options- display the below message
     	$("#event-list").html("<h1> Sorry, there are no upcoming events for this artist in your area</h1>");
     };
    
@@ -187,6 +191,18 @@ $("#runSearch").on("click", function(){
 		$("#results").show();
 
 });
+
+$("#submit").on("click", function(){
+
+		$("#related-artists").empty();
+		$("#event-list").empty();
+		//prevent default in order for the page not to reload
+		event.preventDefault();
+		artistSelected = $("#artist-input").val().trim();
+		getAllArtistInfo(artistSelected);
+		//hide the front page and display the results page
+});
+
 
 
 
