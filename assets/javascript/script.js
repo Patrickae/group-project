@@ -128,12 +128,18 @@ function getAllArtistInfo(x){
 		//artist image displayed
 		$(".artist-pic").html("<img src = "+artistInfo.images[2].url+" id='current-artist-pic'>")
 
+		$(".artist-pic").hide();
+		$(".artist-pic").fadeIn(200);
+
+
 
 
 
 	var artistBtn = $("<button class='btn btn-info' id='play-btnmain'>sample</button>");
 
 				$("#artist-img-song").append(artistBtn);
+				$("#play-btnmain").hide();
+				setTimeout(function(){$("#play-btnmain").fadeIn(300)},300);
 
 				GetAudio(artistId, "main");
 
@@ -186,6 +192,9 @@ function getAllArtistInfo(x){
 			console.log(results);
 
 			
+
+
+
 
 
 			if(results.events.length > 0){
@@ -253,12 +262,24 @@ function getAllArtistInfo(x){
 
 //function to clear divs out
 function clearDivs(){
-	$("#artist-image").empty();
-	$("#related-artists").empty();
-	$("#event-list").empty();
+	$("#artist-image").fadeOut(300);
+	setTimeout(function(){$("#artist-image").empty();}, 305);
+	setTimeout(function(){$("#artist-image").fadeIn(400);}, 650);
+
+	$("#related-artists").slideUp(300);
+	setTimeout(function(){$("#related-artists").empty();}, 305);
+	setTimeout(function(){$("#related-artists").hide();}, 305);
+	setTimeout(function(){$("#related-artists").slideDown(400);}, 650);
+	$("#event-list").slideUp(300);
+	setTimeout(function(){$("#event-list").empty();}, 305);
+	setTimeout(function(){$("#event-list").hide();}, 305);
+	setTimeout(function(){$("#event-list").slideDown(400);}, 650);
 	$("#map").empty();
 	$("audio").remove();
-	$("#play-btnmain").remove();
+
+	$("#play-btnmain").fadeOut(300);
+	setTimeout(function(){$("#play-btnmain").remove();}, 305);
+	
 };
 
 
@@ -273,8 +294,9 @@ $("#runSearch").on("click", function(){
 		artistSelected = $("#inputName").val().trim();
 		getAllArtistInfo(artistSelected);
 		//hide the front page and display the results page
-		$("#page").hide();
-		$("#results").show();
+		$("#page").fadeOut(500);
+		setTimeout(function(){$("#results").fadeIn(1000)},500);
+		// $("#results").fadeIn(1000);
 
 });
 
@@ -295,7 +317,7 @@ $(document).on("click", ".related", function(){
 		console.log(artistNumb);
 		relatedArtist = relatedArtistsList[artistNumb].name;
 		console.log(relatedArtist);
-		getAllArtistInfo(relatedArtist);
+		setTimeout(function(){getAllArtistInfo(relatedArtist)}, 310);
 		stopAudio();
 
 });
@@ -306,7 +328,7 @@ $("#submit").on("click", function(){
 	event.preventDefault();
 	clearDivs();
 	newArtist = $("#artist-input").val().trim();
-	getAllArtistInfo(newArtist);
+	setTimeout(function(){getAllArtistInfo(newArtist)},310);
 	stopAudio();
 });
 
