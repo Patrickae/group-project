@@ -43,6 +43,51 @@
 var relatedArtistsList = [];    
 var relatedArtistsLength = 5;
 
+var artistId;
+
+
+
+//this function creates an audio file for the artistID and makes it play and pause.
+function GetAudio(placeholder, number){
+		$.ajax({
+			url: "https://api.spotify.com/v1/artists/"+ placeholder +"/top-tracks?country=US",
+			method:"GET"
+		}).done(function(music){
+
+			var track = music.tracks[0].preview_url;
+
+			var obj = document.createElement("audio");
+			obj.src = track;
+			obj.autoPlay = false;
+			obj.preLoad = true;	
+			obj.id = placeholder;	
+			var isPlaying = false;	
+
+			$("#artist-image").append(obj);
+
+
+			$("#play-btn"+ number).on("click", function(){
+
+				stopAudio();
+				obj.play();	
+				if(isPlaying === false){
+				event.preventDefault();
+				console.log(obj);
+				obj.play();	
+				isPlaying = true;	
+			} else if(isPlaying === true){
+				obj.pause();
+				isPlaying = false;
+			};
+
+			});			
+		});
+};
+
+
+
+
+
 
 
 function getAllArtistInfo(x){
@@ -85,6 +130,14 @@ function getAllArtistInfo(x){
 
 
 
+
+	var artistBtn = $("<button class='btn btn-info' id='play-btnmain'>sample</button>");
+
+				$("#artist-img-song").append(artistBtn);
+
+				GetAudio(artistId, "main");
+
+
 	//artist ID searched in order to find related artists
 		var relatedArtists = "https://api.spotify.com/v1/artists/"+artistId+"/related-artists";	
 
@@ -99,10 +152,22 @@ function getAllArtistInfo(x){
 			for (i=0; i < relatedArtistsLength; i++){
 
 				relatedArtistsList = data.artists;
+
+				var relatedArtistId = data.artists[i].id;
+
+				console.log(relatedArtistId);
 			
 				var image = $("<img src="+data.artists[i].images[1].url+" class='related' value="+i+">"+data.artists[i].name+"</img><br/>");
+			
+
 				$("#related-artists").append(image);
 
+				var sampleBtn = $("<button class='btn btn-info' id='play-btn"+i+"'>sample</button>");
+
+				$("#related-artists").append(sampleBtn);
+
+				GetAudio(relatedArtistId, i);
+			
 			};
 
 
@@ -120,13 +185,12 @@ function getAllArtistInfo(x){
 
 			console.log(results);
 
-
+			
 
 
 			if(results.events.length > 0){
 
 				for (i=0; i< results.events.length; i++){
-
 
 				var eventInfo = results.events[i];
 
@@ -192,6 +256,9 @@ function clearDivs(){
 	$("#artist-image").empty();
 	$("#related-artists").empty();
 	$("#event-list").empty();
+	$("#map").empty();
+	$("audio").remove();
+	$("#play-btnmain").remove();
 };
 
 
@@ -212,26 +279,37 @@ $("#runSearch").on("click", function(){
 });
 
 
+function stopAudio(){
+$('audio').each(function(){
+    this.pause(); // Stop playing
+    this.currentTime = 0; // Reset time
+});
 
+
+};
 
 $(document).on("click", ".related", function(){
+		
 		clearDivs();
 		artistNumb = $(this).attr("value")
 		console.log(artistNumb);
 		relatedArtist = relatedArtistsList[artistNumb].name;
 		console.log(relatedArtist);
 		getAllArtistInfo(relatedArtist);
+		stopAudio();
 
 });
 
 
 $("#submit").on("click", function(){
+	
 	event.preventDefault();
 	clearDivs();
 	newArtist = $("#artist-input").val().trim();
 	getAllArtistInfo(newArtist);
-
+	stopAudio();
 });
+
 
 
 
