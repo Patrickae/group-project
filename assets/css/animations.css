@@ -1,5 +1,5 @@
-.cb-slideshow,
-.cb-slideshow:after {
+.gigdig-slideshow,
+.gigdig-slideshow:after {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -7,11 +7,11 @@
     left: 0px;
     z-index: 0;
 }
-.cb-slideshow:after {
+.gigdig-slideshow:after {
     content: '';
     background: transparent url(../images/pattern.png) repeat top left;
 }
-.cb-slideshow li span {
+.gigdig-slideshow li span {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -30,10 +30,10 @@
     -ms-animation: imageAnimation 36s linear infinite 0s;
     animation: imageAnimation 36s linear infinite 0s;
 }
-.cb-slideshow li div {
+.gigdig-slideshow li div {
     z-index: 1000;
     position: absolute;
-    bottom: 30px;
+    bottom: 300px;
     left: 0px;
     width: 100%;
     text-align: center;
@@ -44,15 +44,17 @@
     -ms-animation: titleAnimation 36s linear infinite 0s;
     animation: titleAnimation 36s linear infinite 0s;
 }
-.cb-slideshow li div h3 {
-    font-family: 'Arial Narrow', Arial, sans-serif;
+.gigdig-slideshow li div h3 {
+    font-family: Arial, sans-serif;
     font-size: 240px;
     padding: 0;
     line-height: 200px;
 	color: white;
 }
-.cb-slideshow li:nth-child(1) span { background-image: url(../images/concert1.jpg) }
-.cb-slideshow li:nth-child(2) span {
+.gigdig-slideshow li:nth-child(1) span { 
+	background-image: url(../images/concert1.jpg) 
+}
+.gigdig-slideshow li:nth-child(2) span {
     background-image: url(../images/concert2.jpg);
     -webkit-animation-delay: 6s;
     -moz-animation-delay: 6s;
@@ -60,7 +62,7 @@
     -ms-animation-delay: 6s;
     animation-delay: 6s;
 }
-.cb-slideshow li:nth-child(3) span {
+.gigdig-slideshow li:nth-child(3) span {
     background-image: url(../images/concert3.jpg);
     -webkit-animation-delay: 12s;
     -moz-animation-delay: 12s;
@@ -68,7 +70,7 @@
     -ms-animation-delay: 12s;
     animation-delay: 12s;
 }
-.cb-slideshow li:nth-child(4) span {
+.gigdig-slideshow li:nth-child(4) span {
     background-image: url(../images/concert4.jpg);
     -webkit-animation-delay: 18s;
     -moz-animation-delay: 18s;
@@ -76,7 +78,7 @@
     -ms-animation-delay: 18s;
     animation-delay: 18s;
 }
-.cb-slideshow li:nth-child(5) span {
+.gigdig-slideshow li:nth-child(5) span {
     background-image: url(../images/concert5.jpg);
     -webkit-animation-delay: 24s;
     -moz-animation-delay: 24s;
@@ -84,7 +86,7 @@
     -ms-animation-delay: 24s;
     animation-delay: 24s;
 }
-.cb-slideshow li:nth-child(6) span {
+.gigdig-slideshow li:nth-child(6) span {
     background-image: url(../images/concert6.jpg);
     -webkit-animation-delay: 30s;
     -moz-animation-delay: 30s;
@@ -92,35 +94,35 @@
     -ms-animation-delay: 30s;
     animation-delay: 30s;
 }
-.cb-slideshow li:nth-child(2) div {
+.gigdig-slideshow li:nth-child(2) div {
     -webkit-animation-delay: 6s;
     -moz-animation-delay: 6s;
     -o-animation-delay: 6s;
     -ms-animation-delay: 6s;
     animation-delay: 6s;
 }
-.cb-slideshow li:nth-child(3) div {
+.gigdig-slideshow li:nth-child(3) div {
     -webkit-animation-delay: 12s;
     -moz-animation-delay: 12s;
     -o-animation-delay: 12s;
     -ms-animation-delay: 12s;
     animation-delay: 12s;
 }
-.cb-slideshow li:nth-child(4) div {
+.gigdig-slideshow li:nth-child(4) div {
     -webkit-animation-delay: 18s;
     -moz-animation-delay: 18s;
     -o-animation-delay: 18s;
     -ms-animation-delay: 18s;
     animation-delay: 18s;
 }
-.cb-slideshow li:nth-child(5) div {
+.gigdig-slideshow li:nth-child(5) div {
     -webkit-animation-delay: 24s;
     -moz-animation-delay: 24s;
     -o-animation-delay: 24s;
     -ms-animation-delay: 24s;
     animation-delay: 24s;
 }
-.cb-slideshow li:nth-child(6) div {
+.gigdig-slideshow li:nth-child(6) div {
     -webkit-animation-delay: 30s;
     -moz-animation-delay: 30s;
     -o-animation-delay: 30s;
@@ -330,16 +332,17 @@
 	100% { opacity: 0 }
 }
 /* Show something when animations not supported */
-.no-cssanimations .cb-slideshow li span{
+.no-cssanimations .gigdig-slideshow li span{
 	opacity: 1;
 }
 @media screen and (max-width: 1140px) { 
-	.cb-slideshow li div h3 { font-size: 100px }
+	.gigdig-slideshow li div h3 { font-size: 100px }
 }
 @media screen and (max-width: 600px) { 
-	.cb-slideshow li div h3 { font-size: 50px }
+	.gigdig-slideshow li div h3 { font-size: 50px }
 }
 
+<<<<<<< HEAD:assets/css/style4.css
 
 #map {
 <<<<<<< Updated upstream
@@ -350,3 +353,5 @@
     width:70vw;
 >>>>>>> Stashed changes
 }
+=======
+>>>>>>> 8eda274b01f10eaa22578df0e5351d4917fc880f:assets/css/animations.css
