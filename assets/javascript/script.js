@@ -87,6 +87,12 @@ function GetAudio(placeholder, number){
 
 
 
+var artistInfo;
+
+var sResponse=[];
+
+
+
 
 
 
@@ -103,8 +109,7 @@ function getAllArtistInfo(x){
 		url: "https://api.spotify.com/v1/search?query="+artistInput+"&type=artist&market=US&offset=0&limit=1",
 		method:"GET"
 	}).done(function(response){
-		console.log(response);
-
+		
 
 		var artistInfo = response.artists.items[0];
 		//artist ID pulled out. this used to search for related artists
@@ -285,20 +290,32 @@ function clearDivs(){
 
 
 
+
+
+
+
+
+
 $("#results").hide();
 		// on click run function
 
-$("#runSearch").on("click", function(){
+$("#runSearch").on("click", function(){		
+	
 		//prevent default in order for the page not to reload
 		event.preventDefault();
 		artistSelected = $("#inputName").val().trim();
+
 		getAllArtistInfo(artistSelected);
 		//hide the front page and display the results page
 		$("#page").fadeOut(500);
 		setTimeout(function(){$("#results").fadeIn(1000)},500);
 		// $("#results").fadeIn(1000);
+	
 
 });
+
+
+
 
 
 function stopAudio(){
