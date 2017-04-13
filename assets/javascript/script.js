@@ -135,13 +135,19 @@ function getAllArtistInfo(x){
 
 
 
-	var artistBtn = $("<button class='btn btn-info' id='play-btnmain'>sample</button>");
+	var artistBtn = $("<img src='assets/images/playbutton.png' height='100' id='play-btnmain'>");
 
 				$("#artist-img-song").append(artistBtn);
 				$("#play-btnmain").hide();
 				setTimeout(function(){$("#play-btnmain").fadeIn(300)},300);
 
 				GetAudio(artistId, "main");
+
+				$('#play-btnmain').hover(function() {
+				  $(this).attr('src', 'assets/images/playbutton1.png');
+				}, function() {
+				  $(this).attr('src', 'assets/images/playbutton.png');
+				});
 
 
 	//artist ID searched in order to find related artists
@@ -168,14 +174,63 @@ function getAllArtistInfo(x){
 
 				$("#related-artists").append(image);
 
-				var sampleBtn = $("<button class='btn btn-info' id='play-btn"+i+"'>sample</button>");
+				var sampleBtn = $("<img src='assets/images/playbutton.png' height='50' class='playBtn' id='play-btn"+i+"'>");
+				var sampleBtn2 = $("<img src='assets/images/pausebutton.png' height='50' id='pause-btn"+i+"'>");
+
+				$('#play-btn').click(function(){
+						 
+			        $(this).toggleClass("#pause-btn");
+			    });
+
+			/*	sampleBtn2.attr('data-play', 'assets/images/pausebutton.png');
+				sampleBtn2.attr('data-paused', 'assets/images/playbutton.png');
+				sampleBtn2.attr('data-state', 'paused');
+
+				$('.playBtn').on("click", function() {
+                    var state = $(this).attr("data-state");
+                    if (state === "paused") {
+                        $(this).attr('src', $(this).data("play"));
+                        $(this).attr("data-state", "play");
+                    } else {
+                        $(this).attr('src', $(this).data("paused"));
+                        $(this).attr("data-state", "paused");
+                    }
+                });
+				$(sampleBtn).hover(function() {
+				  $(this).attr('src', 'assets/images/playbutton1.png');
+				}, function() {
+				  $(this).attr('src', 'assets/images/playbutton.png');
+				});
+
+				$(sampleBtn).click(function() {
+				  $(this).attr('src', 'assets/images/pausebutton.png');
+				});
+
+				function toggle(el){
+				    if(el.className!="pause")
+				    {
+				        el.src='assets/images/pausebutton.png';
+				        el.className="pause";
+				    }
+				    else if(el.className=="pause")
+				    {
+				        el.src='assets/images/playbutton.png';
+				        el.className="play";
+				    }
+    
+			    return false; 
+				} 
+
+				*/
 
 				$("#related-artists").append(sampleBtn);
 
 				GetAudio(relatedArtistId, i);
-			
+
+						
 			};
 
+			
 
 	});
 
@@ -226,7 +281,7 @@ function getAllArtistInfo(x){
 
 	            console.log(locationFormatted)
 
-				var eventInfoDiv = $("<div>"+prettyTime + " <button data-lat='" + locationFormatted.lat + "' data-lng='" + locationFormatted.lng + "'class='btn btn-success btn-block' id='get-location'>Get Location</button><a href="+ eventInfo.url +" target='_blank'><button class='btn btn-warning btn-block'>Get your tickets Here!</button></a></div>");
+				var eventInfoDiv = $("<div>"+prettyTime + " <button data-lat='" + locationFormatted.lat + "' data-lng='" + locationFormatted.lng + "'class='btn btn-primary btn-block' id='get-location'>Get Location</button><a href="+ eventInfo.url +" target='_blank'><button class='btn btn-info btn-block'>Get your tickets Here!</button></a></div>");
 
 				newMediaBody.append(eventTitleDiv);
 				newMediaBody.append(eventInfoDiv);
@@ -246,7 +301,7 @@ function getAllArtistInfo(x){
         };
 
     }else{
-    		$("#event-list").html("<h1> Sorry, there are no upcoming events for this artist in your area</h1>");
+    		$("#event-list").html("<h1 style='color:white'> Sorry, there are no upcoming events for this artist in your area</h1>");
     };
    
 
