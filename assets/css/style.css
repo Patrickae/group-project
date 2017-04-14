@@ -88,6 +88,25 @@ img.artist-img {
 
 
 #map {
-    height:50vh;
-    width:50vw;
+    height:80vh;
+    width:80vw;
+    left: 10vw;
+    top: 10vh;
+}
+
+.map-wrap {
+    position: fixed;
+    background-color: rgba(40,40,40,0.95);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+
+.map-wrap.hide {
+    display: none;
+}
+
+#closer {
+    color: red;
 }

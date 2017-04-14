@@ -184,7 +184,7 @@ function getAllArtistInfo(x){
 
 				$('#play-btn').click(function(){
 						 
-			        $(this).toggleClass("#pause-btn");
+			        $(this).toggleClass("pause-btn");
 			    });
 
 			/*	sampleBtn2.attr('data-play', 'assets/images/pausebutton.png');
@@ -238,6 +238,7 @@ function getAllArtistInfo(x){
 			
 
 	});
+ 
 
 
 
@@ -295,6 +296,13 @@ function getAllArtistInfo(x){
 	            tixButton.on('click',  function(evt) {
 	                var newCoords ={lat: parseFloat($(this).attr('data-lat')), lng: parseFloat($(this).attr('data-lng'))};
 	                console.log(newCoords);
+	                // when we click 'get location', display the map wrap
+	                $('.map-wrap').removeClass('hide');
+	                // add closer bitton event handler
+	                $('#closer').on('click', function(){
+	                	$('.map-wrap').addClass('hide');
+	                
+	                })
 	                makeDaMap(newCoords);
 	            });
 
