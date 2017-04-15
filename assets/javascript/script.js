@@ -11,9 +11,6 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-
-
-
 //array to put searches pushed and pulled from firebase
 var searchedArray = [];
 
@@ -24,10 +21,6 @@ var relatedArtistsLength = 5;
 
 var artistId;
 var artistInfo;
-
-
-
-
 
 
        function makeDaMap(centerPoint) {
@@ -59,7 +52,6 @@ function stopAudio(){
 };
 
 
-
 //this function creates an audio file for the artistID and makes it play and pause.
 function GetAudio(ID, number){
 		$.ajax({
@@ -79,7 +71,7 @@ function GetAudio(ID, number){
 			//placing the audio tag onto the page. div selected at random-does not affect the display
 			$("#artist-image").append(obj);
 
-			//when the selected play buttin is clicked, the matching audio file plays
+			//when the selected play button is clicked, the matching audio file plays
 			$("#play-btn"+ number).on("click", function(){
 					stopAudio();
 					obj.play();	
@@ -95,10 +87,6 @@ function GetAudio(ID, number){
 			});			
 		});
 };
-
-
-
-
 
 
 // adds all searches to firebase as an array, array length limited to six. if more, the oldest search is spliced
@@ -119,14 +107,7 @@ function addToFirebase(artist){
 };
 
 
-
-
-
-
-
-
 function getAllArtistInfo(input){
-
 
 	// search for the artist in Spotify and pull out info
 	$.ajax({
@@ -158,7 +139,6 @@ function getAllArtistInfo(input){
 	
 
 
-
 //this is the btn to play the sample for the searched for artist
 		var artistBtn = $("<img src='assets/images/playbutton.png' height='100' id='play-btnmain' class='playBtn'>");
 
@@ -182,8 +162,6 @@ function getAllArtistInfo(input){
 
 	//artist ID searched in order to find related artists
 		var relatedArtists = "https://api.spotify.com/v1/artists/"+artistId+"/related-artists";	
-
-
 
 
 		$.ajax({
@@ -226,7 +204,6 @@ function getAllArtistInfo(input){
 
 	});
  
-
 
 //search artist name on seat geek api. we are looking for the id of the artist to use for next search
 $.ajax({
@@ -319,10 +296,6 @@ $.ajax({
 
 
 
-
-
-
-
 //function to clear divs out
 function clearDivs(){
 
@@ -353,9 +326,6 @@ function clearDivs(){
 
 
 
-
-
-
 //call to get data from firebase
 database.ref().on("value", function(snapshot){
 
@@ -375,8 +345,6 @@ database.ref().on("value", function(snapshot){
 		};	
 
 	});
-
-
 
 
 	//hide results on page load
@@ -399,8 +367,6 @@ $("#runSearch").on("click", function(){
 });
 
 
-
-
 //switching the play btn and pause btn on click
 $(document).on("click", '.playBtn', function() {
                     console.log("clicked");
@@ -412,8 +378,6 @@ $(document).on("click", '.playBtn', function() {
                         isPlaying = false;
                     };
   });
-
-
 
 
 //run same functions for searches, recent searches, or related artists
@@ -430,8 +394,6 @@ $(document).on("click", ".related", function(){
 		stopAudio();
 
 });
-
-
 
 
 
@@ -453,7 +415,5 @@ $(document).on("click",".recent-search", function(){
 	stopAudio();
 
 });
-
-
 
 
