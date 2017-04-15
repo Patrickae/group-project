@@ -1,3 +1,29 @@
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyD7LKEZDUSZYb2Di8ln7Qi7c646C-sp1PY",
+    authDomain: "pdhtestit-d8e0d.firebaseapp.com",
+    databaseURL: "https://pdhtestit-d8e0d.firebaseio.com",
+    projectId: "pdhtestit-d8e0d",
+    storageBucket: "pdhtestit-d8e0d.appspot.com",
+    messagingSenderId: "1084562958218"
+  };
+firebase.initializeApp(config);
+
+var database = firebase.database();
+
+var searchedArray = [];
+
+     
+var isPlaying = false;
+var relatedArtistsList = [];    
+var relatedArtistsLength = 5;
+
+var artistId;
+var artistInfo;
+
+
+
+
 
 
        function makeDaMap(centerPoint) {
@@ -20,30 +46,13 @@
 
 
 
-//       function initMap() {
-//         //change these
-       
-//         //console.log(centerPoint);
-//        var uluru = {lat: 35.307093, lng: -80.735164};
-//         //map creation line
-//         var map = new google.maps.Map(document.getElementById('map'), {
-//           zoom: 16,
-//           center: uluru
-//         });
-//         var marker = new google.maps.Marker({
-//           position: uluru,
-//           map: map
-          
-//         });
-       
-//       }
-
-     
-
-var relatedArtistsList = [];    
-var relatedArtistsLength = 5;
-
-var artistId;
+function stopAudio(){
+	$('audio').each(function(){
+	    this.pause(); // Stop playing
+	    this.currentTime = 0; // Reset time
+	    var isPlaying = false;
+	});
+};
 
 
 
@@ -67,18 +76,16 @@ function GetAudio(placeholder, number){
 
 
 			$("#play-btn"+ number).on("click", function(){
-
-				stopAudio();
-				obj.play();	
-				if(isPlaying === false){
-				event.preventDefault();
-				console.log(obj);
-				obj.play();	
-				isPlaying = true;	
-			} else if(isPlaying === true){
-				obj.pause();
-				isPlaying = false;
-			};
+					stopAudio();
+					obj.play();	
+					if(isPlaying === false){
+					event.preventDefault();
+					obj.play();	
+					isPlaying = true;	
+				} else if(isPlaying === true){
+					obj.pause();
+					isPlaying = false;
+				};
 
 			});			
 		});
@@ -87,9 +94,26 @@ function GetAudio(placeholder, number){
 
 
 
-var artistInfo;
 
-var sResponse=[];
+
+
+function addToFirebase(artist){
+
+		if(searchedArray.length < 6){
+			searchedArray.splice(0,0,artist);
+		} else {
+			searchedArray.splice(searchedArray.length-1,1);
+			searchedArray.splice(0,0,artist);
+	};
+
+		database.ref().set({
+
+		recentSearches: searchedArray
+	});
+
+};
+
+
 
 
 
@@ -106,16 +130,23 @@ function getAllArtistInfo(x){
 
 	// search for the artist in Spotify and pull out info
 	$.ajax({
-		url: "https://api.spotify.com/v1/search?query="+artistInput+"&type=artist&market=US&offset=0&limit=1",
+		url: "https://api.spotify.com/v1/search?query="+artistInput+"&type=artist&market=US&offset=0&limit=3",
 		method:"GET"
 	}).done(function(response){
 		
+		console.log(response);
 
-		var artistInfo = response.artists.items[0];
+		var artistInfoArray = response.artists.items;
+
+
+		var artistInfo = artistInfoArray[0];
 		//artist ID pulled out. this used to search for related artists
 		var artistId = artistInfo.id;
 		//artist name - to be displayed and to be used to search seatgeek
 		var artistName = artistInfo.name;
+
+		addToFirebase(artistName);
+
 
 		var artistImgUrl = artistInfo.images[1].url;
 		var artistImg= $("<img src='"+artistImgUrl+"'' alt='"+artistName+"' class='img-responsive'>")
@@ -140,7 +171,8 @@ function getAllArtistInfo(x){
 
 
 
-	var artistBtn = $("<img src='assets/images/playbutton.png' height='100' id='play-btnmain'>");
+
+	var artistBtn = $("<img src='assets/images/playbutton.png' height='100' id='play-btnmain' class='playBtn'>");
 
 				$("#artist-img-song").append(artistBtn);
 				$("#play-btnmain").hide();
@@ -148,15 +180,22 @@ function getAllArtistInfo(x){
 
 				GetAudio(artistId, "main");
 
-				$('#play-btnmain').hover(function() {
-				  $(this).attr('src', 'assets/images/playbutton1.png');
-				}, function() {
-				  $(this).attr('src', 'assets/images/playbutton.png');
-				});
-
+				
+					$('#play-btnmain').hover(function() {
+						if (isPlaying === false){
+					  $(this).attr('src', 'assets/images/playbutton1.png');
+					};
+					}, function() {
+						if (isPlaying === false){
+					  $(this).attr('src', 'assets/images/playbutton.png');
+					};
+					});
+				
 
 	//artist ID searched in order to find related artists
 		var relatedArtists = "https://api.spotify.com/v1/artists/"+artistId+"/related-artists";	
+
+
 
 
 		$.ajax({
@@ -173,63 +212,28 @@ function getAllArtistInfo(x){
 				var relatedArtistId = data.artists[i].id;
 
 				console.log(relatedArtistId);
-			
-				var image = $("<img src="+data.artists[i].images[1].url+" class='related' value="+i+">"+data.artists[i].name+"</img><br/>");
-			
 
-				$("#related-artists").append(image);
+	
 
 				var sampleBtn = $("<img src='assets/images/playbutton.png' height='50' class='playBtn' id='play-btn"+i+"'>");
-				var sampleBtn2 = $("<img src='assets/images/pausebutton.png' height='50' id='pause-btn"+i+"'>");
+				
 
-				$('#play-btn').click(function(){
-						 
-			        $(this).toggleClass("pause-btn");
-			    });
+				
+				//building media object with artist image, name, and play button
+				var newRow = $("<div class='row'>")
+				var mediaObject = $("<div class='media'>")
 
-			/*	sampleBtn2.attr('data-play', 'assets/images/pausebutton.png');
-				sampleBtn2.attr('data-paused', 'assets/images/playbutton.png');
-				sampleBtn2.attr('data-state', 'paused');
+				var mediaLeft = $("<div class='media-left'><img src="+data.artists[i].images[1].url+" class='related' value="+i+"></img></div>");
 
-				$('.playBtn').on("click", function() {
-                    var state = $(this).attr("data-state");
-                    if (state === "paused") {
-                        $(this).attr('src', $(this).data("play"));
-                        $(this).attr("data-state", "play");
-                    } else {
-                        $(this).attr('src', $(this).data("paused"));
-                        $(this).attr("data-state", "paused");
-                    }
-                });
-				$(sampleBtn).hover(function() {
-				  $(this).attr('src', 'assets/images/playbutton1.png');
-				}, function() {
-				  $(this).attr('src', 'assets/images/playbutton.png');
-				});
+				mediaObject.append(mediaLeft);
 
-				$(sampleBtn).click(function() {
-				  $(this).attr('src', 'assets/images/pausebutton.png');
-				});
+				var mediaBody = $("<div class='media-body'><h5 class='media-heading'>"+data.artists[i].name+"</h5></div>");		
+				mediaObject.append(mediaBody);
+				mediaBody.append(sampleBtn);
 
-				function toggle(el){
-				    if(el.className!="pause")
-				    {
-				        el.src='assets/images/pausebutton.png';
-				        el.className="pause";
-				    }
-				    else if(el.className=="pause")
-				    {
-				        el.src='assets/images/playbutton.png';
-				        el.className="play";
-				    }
-    
-			    return false; 
-				} 
+				newRow.append(mediaObject);
 
-				*/
-
-				$("#related-artists").append(sampleBtn);
-
+				$("#related-artists").append(newRow);
 				GetAudio(relatedArtistId, i);
 
 						
@@ -242,10 +246,22 @@ function getAllArtistInfo(x){
 
 
 
+$.ajax({
+ type:"GET",
+ url:'https://api.seatgeek.com/2/performers?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q='+artistName,
+ async:true,
+ dataType: "json",
+ success: function(json) {
+             console.log(json);
+            var performerId1 = json.performers[0].id;
+             
+          
+
+
 	//search seat geek for events related to our artist
 	$.ajax({
 		type:"GET",
-		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&q= "+ artistName + '&geoip=true&range=200mi',
+		url:"https://api.seatgeek.com/2/events?client_id=NzIyODkxOHwxNDkxMjY2NjExLjMy&performers.id= "+ performerId1 + '&geoip=true&range=200mi',
 		async:true,
 		dataType: "json",
 		success: function(results) {
@@ -253,10 +269,6 @@ function getAllArtistInfo(x){
 			console.log(results);
 
 			
-
-
-
-
 
 			if(results.events.length > 0){
 
@@ -321,8 +333,15 @@ function getAllArtistInfo(x){
           },
 
       });
+       },
+
+});
+
+
 	});
 };
+
+
 
 
 
@@ -347,6 +366,8 @@ function clearDivs(){
 
 	$("#play-btnmain").fadeOut(300);
 	setTimeout(function(){$("#play-btnmain").remove();}, 305);
+
+	$("#recent-searches").empty();
 	
 };
 
@@ -354,6 +375,26 @@ function clearDivs(){
 
 
 
+
+
+database.ref().on("value", function(snapshot){
+
+		$("#recent-searches").empty();
+		var firebaseArray = snapshot.val().recentSearches
+
+	if(searchedArray.length === 0){
+		for (i=0; i<firebaseArray.length; i++){
+				searchedArray.splice(0,0,firebaseArray[i]);
+			};
+		};
+
+
+		for (i=0; i<searchedArray.length; i++){
+				var newButton = $("<button class='btn btn-primary btn-block recent-search' value='"+searchedArray[i]+"'>"+searchedArray[i]+"</button>");
+				$("#recent-searches").append(newButton);
+		};	
+
+	});
 
 
 
@@ -373,7 +414,7 @@ $("#runSearch").on("click", function(){
 		$("#page").fadeOut(500);
 		setTimeout(function(){$("#results").fadeIn(1000)},500);
 		// $("#results").fadeIn(1000);
-	
+		
 
 });
 
@@ -381,14 +422,20 @@ $("#runSearch").on("click", function(){
 
 
 
-function stopAudio(){
-$('audio').each(function(){
-    this.pause(); // Stop playing
-    this.currentTime = 0; // Reset time
-});
+$(document).on("click", '.playBtn', function() {
+                    console.log("clicked");
+                    if (isPlaying === false) {
+                        $(this).attr('src', 'assets/images/pausebutton.png');
+                        isPlaying = true;
+                    } else if (isPlaying === true){
+                        $(this).attr('src', 'assets/images/playbutton.png');
+                        isPlaying = false;
+                    };
+  });
 
 
-};
+
+
 
 $(document).on("click", ".related", function(){
 		
@@ -403,6 +450,9 @@ $(document).on("click", ".related", function(){
 });
 
 
+
+
+
 $("#submit").on("click", function(){
 	
 	event.preventDefault();
@@ -413,6 +463,14 @@ $("#submit").on("click", function(){
 });
 
 
+$(document).on("click",".recent-search", function(){
+
+	clearDivs();
+	var recentSearchName = $(this).attr("value");
+	setTimeout(function(){getAllArtistInfo(recentSearchName)}, 310);
+	stopAudio();
+
+});
 
 
 
